@@ -2,6 +2,11 @@ import User from "../models/User.js";
 import OTP from "../models/OTP.js"
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import mailSender from "../utils/mailSender.js";
+import resetEmailTemplate from "../emailTemplates/resetPasswordLinkTemplate.js"
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const registerUser = async(req, res) => {
     try {
@@ -117,7 +122,7 @@ export const loginUser = async(req, res) => {
         }
 
         //generate Token
-        let token = generateToken(existUser._id)
+        let token = generateToken(existUser._id);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -148,3 +153,118 @@ export const loginUser = async(req, res) => {
         })
     }
 }
+
+export const forgetPassword = async(req, res) => {
+    try {
+        const {email} = req.body
+        if(!email) return res.status(404).json({
+            success:false,
+            message:"Email is required"
+        });
+
+        //Check user with the given email
+        let existUser = await User.findOne({email});
+        if(!existUser){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            })
+        }
+
+        //generate token for reset password
+        const token = jwt.sign({ userId: existUser._id }, process.env.JWT_SECRET, { expiresIn: "5m" });
+    
+        //generate reset link
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+        await mailSender(email, "Password reset", resetEmailTemplate(resetLink, email))
+
+        res.status(200).json({
+                success:true,
+                message:"Passwrod reset link send to your email"
+            })
+
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        })
+    }
+}
+
+export const resetPassword = async(req, res) => {
+    try {
+        const {token, newPassword, confirmPassword} = req.body;
+        
+        //validation
+        if (newPassword !== confirmPassword)
+            return res.status(400).json({ 
+            success: false,
+            message: "Passwords do not match" 
+        });
+
+        //verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        //find user
+        const user = await User.findById(decoded.userId);
+    
+        if (!user) return res.status(404).json({ 
+            success:false,
+            message: "Invalid token or user not found" 
+        });
+
+
+        user.password = await bcrypt.hash(newPassword, 10)
+        await user.save();
+
+        res.status(200).json({
+            success:true,
+            message:"Password reset successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        })
+    }
+}
+
+export const changePassword = async(req, res) => {
+    try {
+        const {oldPassword, newPassword} = req.body;
+
+        if(oldPassword === newPassword){
+            return res.status(400).json({
+                success:false,
+                message:"New password must be diffrent from old password"
+            })
+        }
+
+        //get user by req headers
+        const user = await User.findById(req.user._id);
+
+        //match password
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if(!isMatch){
+            return res.status(401).json({
+                success:false,
+                message:"Old password is incorrect"
+            })
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10)
+        await user.save();
+
+        res.status(200).json({
+            success:true,
+            message:"Password Change Successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:"Failed to Change password"
+        })
+    }
+}
+
