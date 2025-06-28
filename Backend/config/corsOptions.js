@@ -1,5 +1,5 @@
 const allowedOrigins = [
-  'http://localhost:3000',        // Dev frontend
+  'http://localhost:5173',        // Dev frontend
   'https://yourapp.com'           // Production frontend
 ];
 

@@ -5,15 +5,18 @@ import { generateToken } from "../utils/generateToken.js";
 import mailSender from "../utils/mailSender.js";
 import resetEmailTemplate from "../emailTemplates/resetPasswordLinkTemplate.js"
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import dotenv from 'dotenv';
+import oauth2client from "../utils/googleConfig.js";
+import axios from "axios";
 dotenv.config();
 
 export const registerUser = async(req, res) => {
     try {
-        const {firstName, lastName, email, password } = req.body;
+        const {name, email, password } = req.body;
 
         //Validation
-        if(!firstName || !lastName || !email || !password){
+        if(!name || !email || !password){
             res.status(403).json({
                 success:false,
                 message:"All fields are required"
@@ -49,7 +52,7 @@ export const registerUser = async(req, res) => {
 
 export const verifyOTP = async(req, res) => {
     try {
-        const {firstName, lastName, email, password, otp} = req.body;
+        const {name, email, password, otp} = req.body;
 
         //find recent OTP 
         const recentOTP = await OTP.findOne({email}).sort({createdAt: -1}).limit(1);
@@ -64,12 +67,11 @@ export const verifyOTP = async(req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
-            firstName,
-			lastName,
+            name,
 			email,
 			password: hashedPassword,
             isVerified:true,
-			profileImage:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`
+			profileImage:`https://api.dicebear.com/5.x/initials/svg?seed=${name.split(" ")[0]} ${name.split(" ")[1]}`
         });
 
         return res.status(201).json({
@@ -136,8 +138,7 @@ export const loginUser = async(req, res) => {
             message:"Login Sucessfully",
             user:{
                 id: existUser._id,
-                firstName: existUser.firstName,
-                lastName: existUser.lastName,
+                name: existUser.name,
                 email: existUser.email,
                 role: existUser.role,
                 isVerified:existUser.isVerified,
@@ -245,7 +246,7 @@ export const changePassword = async(req, res) => {
         const user = await User.findById(req.user._id);
 
         //match password
-        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        const isMatch = bcrypt.compare(oldPassword, user.password);
         if(!isMatch){
             return res.status(401).json({
                 success:false,
@@ -289,3 +290,70 @@ export const logoutUser = async(req, res) => {
     }
 }
 
+export const checkAuth = async(req, res) => {
+    try {
+        const token = req.cookies.token;
+        if(!token) {return res.status(404).json({isAuthenticated:false})}
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        //get user by id and send it into response
+        const user = await User.findById(decoded.userId)
+
+        return res.status(200).json({ isAuthenticated: true, user });
+    } catch (error) {
+        return res.status(500).json({ isAuthenticated: false, user: null });
+    }
+}
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleLogin = async(req, res) => {
+    try {
+        const { code } = req.query; // Google Code
+
+        const googleRes = await oauth2client.getToken(code)
+        
+        oauth2client.setCredentials(googleRes.tokens);
+
+        const userRes = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+        )
+
+        const {email, name, picture } = userRes.data;
+
+        //find user
+        let user = await User.findOne({email});
+        if (!user) {
+        user = await User.create({
+            name:name,
+            email:email,
+            password: null,
+            isVerified: true,
+            provider: 'google',
+            profileImage: picture,
+        });
+        }
+
+        const {_id} = user
+        const token = generateToken(user._id)
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === "production",
+            sameSite: "None",
+            secure:true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        })
+
+        return res.status(200).json({
+            success:true,
+            token,
+            user,
+        });
+    } catch (error) {
+        return res.status(500).json({
+        success:false,
+        message:"Google Login Failed"
+    });
+    }
+}
