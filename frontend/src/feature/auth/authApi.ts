@@ -27,7 +27,23 @@ export const authApi = createApi({
         method: 'POST',
       }),
     }),
+
+    register: builder.mutation({
+      query: (payload) => ({
+        url:"/auth/register",
+        method:"POST",
+        body: payload,
+      })
+    }),
+    
+    verifyOtp: builder.mutation({
+      query: (payload) => ({
+        url:"/auth/register",
+        method:"POST",
+        body: payload,
+      })
+    })
   }),
 });
 
-export const { useCheckAuthQuery, useLoginUserMutation, useLogoutMutation } = authApi;
+export const { useCheckAuthQuery, useLoginUserMutation, useLogoutMutation, useRegisterMutation } = authApi;

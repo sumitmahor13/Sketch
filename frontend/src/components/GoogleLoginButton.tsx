@@ -4,6 +4,8 @@ import { googleAuth } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../feature/auth/authSlice";
+import { FcGoogle } from "react-icons/fc";
+import CTABtn from "../components/common/CTABtn"
 
 const GoogleLoginButton: React.FC = () => {
   const navigate = useNavigate();
@@ -31,11 +33,9 @@ const GoogleLoginButton: React.FC = () => {
   });
   return (
     <>
-      <button
-        onClick={() => login()}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Login with Google
+      <button onClick={() => login()} 
+        className="w-full flex gap-2 border-2 border-gray-200 justify-center items-center px-3 py-2 rounded-full hover:scale-102 transition-all duration-500 ease-in-out">
+       <FcGoogle size={25}/> Login with Google
       </button>
     </>
   );
