@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { User } from "../../types/User";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -13,7 +12,7 @@ export const authApi = createApi({
       query: () => '/auth/check-auth',
     }),
 
-    loginUser: builder.mutation<User, { email: string; password: string }>({
+    loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
@@ -38,7 +37,23 @@ export const authApi = createApi({
     
     verifyOtp: builder.mutation({
       query: (payload) => ({
-        url:"/auth/register",
+        url:"/auth/verify-otp",
+        method:"POST",
+        body: payload,
+      })
+    }),
+
+    forgetPassword: builder.mutation({
+      query: (payload) => ({
+        url:"/auth/forget-password",
+        method:"POST",
+        body: payload,
+      })
+    }),
+
+    resetPassword: builder.mutation({
+      query: (payload) => ({
+        url:"/auth/reset-password",
         method:"POST",
         body: payload,
       })
@@ -46,4 +61,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useCheckAuthQuery, useLoginUserMutation, useLogoutMutation, useRegisterMutation } = authApi;
+export const { useCheckAuthQuery, useLoginUserMutation, useLogoutMutation, useRegisterMutation, useForgetPasswordMutation, useVerifyOtpMutation, useResetPasswordMutation } = authApi;

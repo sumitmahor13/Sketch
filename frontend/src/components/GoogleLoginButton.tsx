@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../feature/auth/authSlice";
 import { FcGoogle } from "react-icons/fc";
-import CTABtn from "../components/common/CTABtn"
 
 const GoogleLoginButton: React.FC = () => {
   const navigate = useNavigate();

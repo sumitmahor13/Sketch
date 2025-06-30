@@ -76,7 +76,7 @@ export const verifyOTP = async(req, res) => {
 
         return res.status(201).json({
             success:true,
-            message:"User registered successfully"
+            message:"Account created successfully"
         })
     } catch (error) {
         return res.status(500).json({
@@ -226,7 +226,7 @@ export const resetPassword = async(req, res) => {
     } catch (error) {
         res.status(500).json({
             success:false,
-            message:"Internal server error"
+            message:"Invalid Token or user not found"
         })
     }
 }
