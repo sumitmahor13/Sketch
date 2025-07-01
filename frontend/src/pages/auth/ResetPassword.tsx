@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { LuArrowLeft, LuArrowRight } from "react-icons/lu";
 import CTABtn from "../../components/common/CTABtn";
-import { PiEyeDuotone, PiEyeSlashDuotone, PiCheckCircleFill } from "react-icons/pi";
+import { PiEye, PiEyeSlash, PiCheckCircleFill } from "react-icons/pi";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { resetPasswordSchema } from '../../validations/formSchema'
-import { useRegisterMutation, useResetPasswordMutation } from "../../feature/auth/authApi";
-import FormLayout from "../../layouts/formLayouts";
+import { useResetPasswordMutation } from "../../feature/auth/authApi";
+import FormLayout from "../../layouts/FormLayouts";
 import toast from "react-hot-toast";
 
 const ResetPassword: React.FC = () => {
@@ -51,9 +51,11 @@ const ResetPassword: React.FC = () => {
     }
   }
 
+  const desc = "Please fill the details below to update your password"
+
   return (
     <>
-      <FormLayout title="Update your password" formType="reset-password">
+      <FormLayout title="Reset your password" description={desc} formType="reset-password">
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         {/* Password Field */}
           <div className="mb-2 relative">
@@ -68,7 +70,7 @@ const ResetPassword: React.FC = () => {
               <p className="text-red-400 text-sm px-2">{errors.newPassword.message}</p>
             )}
             <span onClick={() => setShowPassword((prev) => !prev)} className="absolute right-4 top-8 text-gray-500 z-[10] cursor-pointer">
-                {showPassword ? <PiEyeDuotone fontSize={20} /> : <PiEyeSlashDuotone fontSize={20} />}
+                {showPassword ? <PiEye fontSize={20} /> : <PiEyeSlash fontSize={20} />}
             </span>
           </div>
 
@@ -85,11 +87,11 @@ const ResetPassword: React.FC = () => {
               <p className="text-red-400 text-sm px-2">{errors.confirmPassword.message}</p>
             )}
             <span onClick={() => setShowConfirmPassword((prev) => !prev)} className="absolute right-4 top-8 text-gray-500 z-[10] cursor-pointer">
-                {showConfirmPassword ? <PiEyeDuotone fontSize={20} /> : <PiEyeSlashDuotone fontSize={20} />}
+                {showConfirmPassword ? <PiEye fontSize={20} /> : <PiEyeSlash fontSize={20} />}
             </span>
           </div>
 
-          <label className="block text-sm px-2 font-medium ">Your password must contain:</label>
+        <label className="block text-sm px-2 font-medium ">Your password must contain:</label>
         <div className="text-sm mb-3 border-2 border-gray-200 rounded-2xl p-3">
             <p className={`${criteria.minLength ? "text-green-500" : "text-gray-400"} flex items-center gap-1`}>
               <PiCheckCircleFill size={15}/> Minimum 8 characters

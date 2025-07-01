@@ -33,7 +33,7 @@ const GoogleLoginButton: React.FC = () => {
   return (
     <>
       <button onClick={() => login()} 
-        className="w-full flex gap-2 border-2 border-gray-200 justify-center items-center px-3 py-2 rounded-full hover:scale-102 transition-all duration-500 ease-in-out">
+        className="w-full flex gap-2 border-2 border-gray-200 justify-center items-center px-3 py-2 rounded-full hover:scale-102 transition-all duration-500 ease-in-out cursor-pointer">
        <FcGoogle size={25}/> Login with Google
       </button>
     </>

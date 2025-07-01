@@ -2,20 +2,19 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LuArrowRight } from "react-icons/lu";
 import CTABtn from "../../components/common/CTABtn";
-import { PiEyeDuotone, PiEyeSlashDuotone } from "react-icons/pi";
+import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from '../../validations/formSchema'
 import { useRegisterMutation } from "../../feature/auth/authApi";
-import FormLayout from "../../layouts/formLayouts";
+import FormLayout from "../../layouts/FormLayouts";
 import toast from "react-hot-toast";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-  const [registerUser, {isLoading}] = useRegisterMutation();
+  const [registerUser] = useRegisterMutation();
   
-  const [formData, setFormData] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -25,7 +24,6 @@ const Register: React.FC = () => {
   } = useForm({ resolver: yupResolver(registerSchema), mode: "onTouched" });
 
   const onSubmit = async(data:any) => {
-    setFormData(data);
     sessionStorage.setItem("signupData", JSON.stringify(data)); //set details in session storage for next page
     const toastId = toast.loading("Loading...");
     try {
@@ -40,9 +38,11 @@ const Register: React.FC = () => {
     }
   }
 
+  const desc = "Join us for exclusive deals tailored just for you"
+  
   return (
     <>
-      <FormLayout title="Create your account" formType="register">
+      <FormLayout title="Create your account" description={desc} formType="register">
         <GoogleLoginButton/>
         <div className="relative w-full border-t-2 border-gray-200 my-2">
           <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-1.5 bg-white text-gray-300">OR</p>
@@ -90,7 +90,7 @@ const Register: React.FC = () => {
               <p className="text-red-400 text-sm px-2">{errors.password.message}</p>
             )}
             <span onClick={() => setShowPassword((prev) => !prev)} className="absolute right-4 top-8 text-gray-500 z-[10] cursor-pointer">
-                {showPassword ? <PiEyeDuotone fontSize={20} /> : <PiEyeSlashDuotone fontSize={20} />}
+                {showPassword ? <PiEye fontSize={20} /> : <PiEyeSlash fontSize={20} />}
             </span>
           </div>
 

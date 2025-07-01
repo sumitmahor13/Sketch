@@ -1,11 +1,8 @@
 import React from 'react'
-import FormLayout from '@/layouts/formLayouts'
-import { useForm } from 'react-hook-form';
+import FormLayout from '@/layouts/FormLayouts'
 import CTABtn from "../../components/common/CTABtn"
-import { yupResolver } from '@hookform/resolvers/yup';
-import { forgetPasswordSchema } from '@/validations/formSchema';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForgetPasswordMutation, useVerifyOtpMutation } from '@/feature/auth/authApi';
+import { useVerifyOtpMutation } from '@/feature/auth/authApi';
 import { LuArrowLeft, LuArrowRight } from 'react-icons/lu';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp"
 import { InputOTP, InputOTPGroup, InputOTPSlot} from "@/components/ui/input-otp"
@@ -15,10 +12,11 @@ const VerifyOTP: React.FC = () => {
     const navigate = useNavigate();
     const [verifyOTP] = useVerifyOtpMutation();
     const [otp, setOtp] = React.useState("")
+    
+    var storedDetails = JSON.parse(sessionStorage.getItem('signupData'));  //get session for payload
 
     const submitHandler = async(e:any) => {
         e.preventDefault();
-        const storedDetails = JSON.parse(sessionStorage.getItem('signupData'));  //get session for payload
         const payload = {
             name:storedDetails.name,
             email: storedDetails.email,
@@ -39,8 +37,10 @@ const VerifyOTP: React.FC = () => {
         }
     }
 
+    let desc = `We have send verification code to your email ${storedDetails.email}`
+
   return (
-    <FormLayout title='Verify OTP' formType='verify-otp'>
+    <FormLayout title='Verify OTP' description={desc} formType='verify-otp'>
         <form onSubmit={submitHandler} className='flex flex-col gap-y-5'>
             <InputOTP maxLength={6} value={otp} onChange={(otp) => setOtp(otp)} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
                 <InputOTPGroup className='flex gap-3'>
