@@ -33,7 +33,7 @@ const ForgetPassword: React.FC = () => {
     const desc = "No worries, we'll send you reset instructions"
 
   return (
-    <FormLayout title='Forgot Password?' description={desc} formType='forget-password'>
+    <FormLayout title='Forgot Password?' description={desc} formType='forgetPassword'>
       <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col gap-1'>
           <div className="mb-2">
             <label className="block text-sm px-2 font-medium ">Email<sup className="text-rose-500 p-0.5">*</sup></label>
