@@ -55,7 +55,7 @@ const ResetPassword: React.FC = () => {
 
   return (
     <>
-      <FormLayout title="Reset your password" description={desc} formType="reset-password">
+      <FormLayout title="Reset your password" description={desc} formType="resetPassword">
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         {/* Password Field */}
           <div className="mb-2 relative">

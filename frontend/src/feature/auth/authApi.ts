@@ -8,7 +8,7 @@ export const authApi = createApi({
   }),
   endpoints: (builder) => ({
 
-    checkAuth: builder.query({
+    checkAuth: builder.query<any, void>({
       query: () => '/auth/check-auth',
     }),
 

@@ -40,7 +40,7 @@ const VerifyOTP: React.FC = () => {
     let desc = `We have send verification code to your email ${storedDetails.email}`
 
   return (
-    <FormLayout title='Verify OTP' description={desc} formType='verify-otp'>
+    <FormLayout title='Verify OTP' description={desc} formType='verifyOTP'>
         <form onSubmit={submitHandler} className='flex flex-col gap-y-5'>
             <InputOTP maxLength={6} value={otp} onChange={(otp) => setOtp(otp)} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
                 <InputOTPGroup className='flex gap-3'>

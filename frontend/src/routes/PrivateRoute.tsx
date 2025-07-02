@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const { data, isLoading } = useCheckAuthQuery();
 
-  if (isLoading) return <p>Loading...</p>;
+  // if (isLoading) return <p>Loading...</p>;
 
   return data?.isAuthenticated ? children : <Navigate to="/login" />;
 };

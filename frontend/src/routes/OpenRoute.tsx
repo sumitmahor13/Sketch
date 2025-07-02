@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 const OpenRoute = ({ children }: { children: JSX.Element }) => {
   const { data, isLoading } = useCheckAuthQuery();
 
-  if (isLoading) return <p>Loading...</p>;
+  // if (isLoading) return <p>Loading...</p>;
 
   return data?.isAuthenticated ? <Navigate to="/dashboard" /> : children;
 };

@@ -20,7 +20,7 @@ const banners: Record<string, string> = {
     register: ForgotrBanner,
     forgetPassword: RegisterBanner,
     verifyOTP: VerifyOTPBanner,
-    resetPass: resetPassBanner,
+    resetPassword: resetPassBanner,
   }
 
 const FormLayout: React.FC<FormTemplateProps> = ({
