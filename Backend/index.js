@@ -5,6 +5,7 @@ import dbConnect from './config/db.js'
 import corsOptions from "./config/corsOptions.js";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js"
+import productRoutes from "./routes/productRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser())
 
 //routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/product', productRoutes);
 
 let PORT = process.env.PORT || 5000;
 
