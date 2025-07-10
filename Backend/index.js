@@ -6,6 +6,7 @@ import corsOptions from "./config/corsOptions.js";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js"
 import productRoutes from "./routes/productRoutes.js"
+import cartRoutes from "./routes/cartRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,7 @@ app.use(cookieParser())
 //routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/product', productRoutes);
+app.use("/api/v1/cart", cartRoutes);
 
 let PORT = process.env.PORT || 5000;
 

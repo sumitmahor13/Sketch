@@ -13,8 +13,6 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    console.log(":::",req.files)
-
     // image check
     if (!req.files || req.files.length < 4) {
       return res.status(400).json({
@@ -128,7 +126,6 @@ export const getAllProducts = async (req, res) => {
       products,
     });
   } catch (error) {
-    console.log("Error in getAllProducts:", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
