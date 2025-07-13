@@ -8,6 +8,9 @@ function Home() {
     <MainLayout>
       <div className="w-full min-h-screen flex items-center justify-center ">
         {user && <h1 className="text-gray-700 text-5xl font-bold ">Hello {user.name.split(" ")[0]} !</h1>}
+        <div className="w-full">
+          <img className="object-cover w-full" src="https://images.unsplash.com/photo-1656896402555-f606bb9b7d18?q=80&w=1149&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"/>
+        </div>
       </div>
     </MainLayout>
   );

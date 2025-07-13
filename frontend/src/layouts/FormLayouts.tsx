@@ -32,9 +32,9 @@ const FormLayout: React.FC<FormTemplateProps> = ({
   return (
     <div className="w-full p-5 h-screen max-w-[1650px] mx-auto flex  gap-5">
       <div className="w-full md:w-[60%] lg:w-[40%] md:p-5 ">
-        <div className="text-orange-500 text-2xl md:text-3xl font-bold">
+        <div className="text-2xl md:text-3xl font-bold">
           <Link to="/">
-            <img src={SketchLogo} className="w-24 h-10" />
+            <img src={SketchLogo} className="w-20 h-10" />
           </Link>
         </div>
         <div className="flex flex-col px-3 lg:px-20 py-10 gap-5 items-center">
