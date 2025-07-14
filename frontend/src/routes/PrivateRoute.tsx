@@ -3,12 +3,26 @@ import type { JSX } from 'react';
 import { useCheckAuthQuery } from '../feature/auth/authApi';
 import { Navigate } from 'react-router-dom';
 
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+type PrivateRouteProps = {
+  children: JSX.Element;
+  allowedRoles?: string[]; 
+};
+
+const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
   const { data, isLoading } = useCheckAuthQuery();
 
-  // if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading...</p>;
 
-  return data?.isAuthenticated ? children : <Navigate to="/login" />;
+  const isLoggedIn = data?.isAuthenticated;
+  const userRole = data?.user?.role;
+
+  //check is user logged in or not
+  if(!isLoggedIn) return <Navigate to="/login"/>
+
+  //check for role
+  if(allowedRoles && !allowedRoles.includes(userRole)) return <Navigate to="/"/>
+
+  return children;
 };
 
 export default PrivateRoute;

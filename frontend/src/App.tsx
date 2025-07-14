@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loader from "./components/common/Loader";
 import OpenRoute from "./routes/OpenRoute";
 import PrivateRoute from "./routes/PrivateRoute";
-import Dashboard from "./pages/Dashboard";
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import { useCheckAuthQuery } from "./feature/auth/authApi";
 import { useDispatch } from "react-redux";
 import { clearUser, setUser } from "./feature/auth/authSlice";
@@ -38,7 +39,8 @@ function App() {
           <Route path="/login" element={<OpenRoute><Login /></OpenRoute>} />
           <Route path="/forget-password" element={<OpenRoute><ForgetPassword /></OpenRoute>} />
           <Route path="/reset-password/:token" element={<OpenRoute><ResetPassword /></OpenRoute>} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
+          <Route path="/dashboard" element={<PrivateRoute allowedRoles={['user']}><UserDashboard/></PrivateRoute>}/>
+          <Route path="/admin/dashboard" element={<PrivateRoute allowedRoles={['admin']}><AdminDashboard /></PrivateRoute>}/>
         </Routes>
       </Suspense>
     </Router>

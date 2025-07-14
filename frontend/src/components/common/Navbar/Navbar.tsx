@@ -3,6 +3,10 @@ import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RootState } from "../../../app/store";
 import SketchLogo from "../../../../public/Assets/SketchLogo.svg";
+import { Link, useNavigate } from "react-router-dom";
+import { PiArrowLeft, PiGear, PiPackage, PiUser, PiShoppingBag} from "react-icons/pi";
+import { useLogoutMutation } from "@/feature/auth/authApi";
+import toast from "react-hot-toast";
 
 type NavCategory = {
   category: string;
@@ -85,24 +89,11 @@ const navLinks: NavLink[] = [
     subLinks: [
       {
         category: "Company",
-        links: [
-          "Our Story",
-          "Mission",
-          "Vision",
-          "Team",
-          "Careers",
-          "Press",
-        ],
+        links: ["Our Story", "Mission", "Vision", "Team", "Careers", "Press"],
       },
       {
         category: "Legal",
-        links: [
-          "Privacy Policy",
-          "Terms",
-          "Cookies",
-          "Security",
-          "Compliance",
-        ],
+        links: ["Privacy Policy", "Terms", "Cookies", "Security", "Compliance"],
       },
     ],
   },
@@ -179,10 +170,26 @@ const navLinks: NavLink[] = [
 ];
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
+
+  const [logout] = useLogoutMutation();
+
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeLink, setActiveLink] = useState<string | null>(null);
+
+  const [menu, setMenu] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const res = await logout({});
+      toast.success(res.data.message);
+      navigate("/login")
+    } catch (error) {
+      toast.error("Somthing went wrong");
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -222,7 +229,18 @@ const Navbar: React.FC = () => {
           ))}
         </ul>
         <div>
-          {user ? <img className=" w-8 h-8 rounded-full" src={user?.profileImage}/> : <button>Login</button>}
+          {user ? (
+            <div className="flex gap-5 text-gray-800 items-center">
+              <PiShoppingBag className="cursor-pointer" size={22} />
+              <img
+                onClick={() => setMenu(!menu)}
+                className=" w-6 h-6 rounded-full cursor-pointer"
+                src={user?.profileImage}
+              />
+            </div>
+          ) : (
+            <button>Login</button>
+          )}
         </div>
       </div>
 
@@ -263,6 +281,39 @@ const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div
+        onClick={() => setMenu(false)}
+        className={`absolute ${
+          menu ? "scale-100" : "scale-0"
+        } transition-all w-48 z-0 duration-200 ease-in-out top-16 shadow cursor-pointer rounded-3xl flex flex-col justify-center items-start gap-y- p-2 right-5 bg-white`}
+      >
+        {/* <PiX className="absolute right-4 top-4" /> */}
+        <Link to={"/"} className="w-full">
+          <div className="flex gap-1 items-center transition-all duration-300 hover:bg-gray-300 py-2 px-3 rounded-xl">
+            <PiUser size={20} />
+            Profile
+          </div>
+        </Link>
+        <Link to={"/my-orders"} className="w-full">
+          <div className="flex gap-1 items-center transition-all duration-300 hover:bg-gray-300 py-2 px-3 rounded-xl">
+            <PiPackage size={20} />
+            My Orders
+          </div>
+        </Link>
+        <Link to={"profile/settings"} className="w-full">
+          <div className="flex gap-1 items-center transition-all duration-300 hover:bg-gray-300 py-2 px-3 rounded-xl">
+            <PiGear size={20} />
+            Profile
+          </div>
+        </Link>
+        <div className="w-full" onClick={handleLogout}>
+          <div className="flex items-center transition-all duration-300 text-red-400 hover:bg-red-200 py-2 px-3 rounded-xl">
+            <PiArrowLeft size={20} />
+            Logout
+          </div>
+        </div>
+      </div>
     </motion.nav>
   );
 };
