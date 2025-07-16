@@ -4,7 +4,7 @@ import { useCheckAuthQuery } from '../feature/auth/authApi';
 import { Navigate } from 'react-router-dom';
 
 const OpenRoute = ({ children }: { children: JSX.Element }) => {
-  const { data, isLoading } = useCheckAuthQuery();
+  const { data } = useCheckAuthQuery();
 
   // if (isLoading) return <p>Loading...</p>;
 

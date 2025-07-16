@@ -4,7 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { RootState } from "../../../app/store";
 import SketchLogo from "../../../../public/Assets/SketchLogo.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { PiArrowLeft, PiGear, PiPackage, PiUser, PiShoppingBag} from "react-icons/pi";
+import {
+  PiArrowLeft,
+  PiGear,
+  PiPackage,
+  PiUser,
+  PiShoppingBag,
+  PiSquaresFour,
+} from "react-icons/pi";
 import { useLogoutMutation } from "@/feature/auth/authApi";
 import toast from "react-hot-toast";
 
@@ -185,11 +192,11 @@ const Navbar: React.FC = () => {
     try {
       const res = await logout({});
       toast.success(res.data.message);
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       toast.error("Somthing went wrong");
     }
-  }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -231,7 +238,11 @@ const Navbar: React.FC = () => {
         <div>
           {user ? (
             <div className="flex gap-5 text-gray-800 items-center">
-              <PiShoppingBag className="cursor-pointer" size={22} />
+              {user.role === "user" ? (
+                <Link to={"/cart"}><PiShoppingBag className="cursor-pointer" size={22} /></Link>
+              ) : (
+                <Link to={"/admin/dashboard"}><PiSquaresFour className="cursor-pointer" size={22} /></Link>
+              )}
               <img
                 onClick={() => setMenu(!menu)}
                 className=" w-6 h-6 rounded-full cursor-pointer"
