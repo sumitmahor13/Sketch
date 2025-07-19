@@ -11,7 +11,7 @@ const Cart: React.FC = () => {
                 <div>
                     <h1>{item.product.name}</h1>
                     <div>
-                        {item.product.images.map((imge) => (
+                        {item.product.images.map((imge:any) => (
                             <img className="w-42" src={imge.url}/>
                         ))}
                     </div>

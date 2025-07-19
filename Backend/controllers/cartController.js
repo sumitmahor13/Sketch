@@ -57,23 +57,81 @@ export const addToCart = async(req, res) => {
     }
 }
 
-export const getUserCart = async(req, res) => {
+export const getUserCart = async (req, res) => {
     try {
-        const cartItem = await Cart.find({user: req.user._id})
-        .populate("product", "name price images brand category stock")
-        .sort({ createdAt: -1 });
+        const cartItems = await Cart.find({ user: req.user._id })
+            .populate("product", "name price images brand category stock")
+            .sort({ createdAt: -1 });
+
+        let cartDetails = [];
+        let totalSubtotal = 0;
+
+        // Loop through each item to calculate subtotal
+        for (const item of cartItems) {
+            const product = item.product;
+            const quantity = item.quantity;
+            const price = product.price;
+            const subtotal = price * quantity;
+
+            totalSubtotal += subtotal;
+
+            cartDetails.push({
+                _id: item._id,
+                product: {
+                    _id: product._id,
+                    name: product.name,
+                    price: price,
+                    images: product.images,
+                    brand: product.brand,
+                    category: product.category,
+                    stock: product.stock,
+                },
+                quantity,
+                subtotal,
+            });
+        }
+
+        // Example shipping charge logic
+        const shippingCharge = totalSubtotal > 2000 ? 0 : 200; // Free shipping over ₹2000
+
+        // Dynamic discount logic based on subtotal percentage
+        let discount = 0;
+        let discountPercentage = 0;
+
+        if (totalSubtotal > 10000) {
+            discountPercentage = 15; // 15% off for orders above ₹10000
+        } else if (totalSubtotal > 5000) {
+            discountPercentage = 10; // 15% off for orders above ₹5000
+        } else if (totalSubtotal > 2000) {
+            discountPercentage = 5; // 10% off for orders above ₹2000
+        } else if (totalSubtotal > 1000) {
+            discountPercentage = 3; // 5% off for orders above ₹1000
+        }
+
+        discount = (totalSubtotal * discountPercentage) / 100;
+
+        const finalAmount = totalSubtotal + shippingCharge - discount;
 
         res.status(200).json({
             success: true,
-            cartItem,
+            cart: {
+                items: cartDetails,
+                subtotal: totalSubtotal,
+                shippingCharge,
+                discount,
+                discountPercentage,
+                finalAmount,
+            },
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message:"Failed to fetch cart"
+            message: "Failed to fetch cart",
         });
     }
-}
+};
+
+
 
 export const updateCart = async(req, res) => {
     try {
