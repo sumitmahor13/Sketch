@@ -66,10 +66,14 @@ export const getUserCart = async (req, res) => {
         let cartDetails = [];
         let totalSubtotal = 0;
 
+        console.log("CARTITEMS",cartItems)
+
         // Loop through each item to calculate subtotal
         for (const item of cartItems) {
             const product = item.product;
             const quantity = item.quantity;
+            const size = item.size;
+            const color = item.color;
             const price = product.price;
             const subtotal = price * quantity;
 
@@ -81,6 +85,8 @@ export const getUserCart = async (req, res) => {
                     _id: product._id,
                     name: product.name,
                     price: price,
+                    size:size,
+                    color:color,
                     images: product.images,
                     brand: product.brand,
                     category: product.category,
