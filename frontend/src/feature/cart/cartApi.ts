@@ -6,6 +6,7 @@ export const cartApi = createApi({
     baseUrl: import.meta.env.VITE_BACKEND_URL,
     credentials: "include", // cookies bhejne ke liye
   }),
+  tagTypes: ['Cart'],
   endpoints: (builder) => ({
 
     getUserCart: builder.query<any, void>({

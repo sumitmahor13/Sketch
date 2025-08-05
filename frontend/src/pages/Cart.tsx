@@ -5,6 +5,7 @@ import CTABtn from "../components/common/CTABtn"
 import { PiArrowLeft, PiMinus, PiPlus, PiTrash } from "react-icons/pi";
 import toast from "react-hot-toast";
 import { formatToINR } from '../utils/currency';
+import EmptyCart from "../../public/Assets/emptyBox.png"
 
 const Cart: React.FC = () => {
   const { data } = useGetUserCartQuery();
@@ -33,7 +34,8 @@ const Cart: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className="w-11/12 mx-auto min-h-screen flex flex-col gap-10">
+      {data?.cart?.items.length > 0 ? 
+      <div className="w-11/12 mx-auto h-screen overflow-y-hidden flex flex-col gap-10">
         <div className="flex items-center justify-between pt-16">
             <h1 className="font-bold text-6xl">My Cart</h1>
             <div className="w-52"><CTABtn title="Continue Shopping" bg="black" text="white" icon={<PiArrowLeft size={25}/>}/></div>
@@ -43,10 +45,10 @@ const Cart: React.FC = () => {
                 <div className="grid grid-cols-5">
                     <div className="col-span-2">PRODUCT</div>
                     <div className="">PRICE</div>
-                    <div className="">QTY</div>
+                    <div className="">QUANTITY</div>
                     <div className="">TOTAL</div>
                 </div>
-                <div>
+                <div className="h-[70vh] overflow-y-auto hide-scrollbar">
                     {
                         data?.cart?.items?.map((item:any) => {
                             return (
@@ -73,9 +75,10 @@ const Cart: React.FC = () => {
                             )
                         })
                     }
+
                 </div>
             </div>
-            <div className="flex flex-col gap-5 bg-gray-200 w-[25%] p-5 rounded-2xl mx-auto ">
+            <div className="flex h-fit flex-col gap-5 bg-gray-200 w-[25%] p-5 rounded-2xl mx-auto ">
                 <h1 className="font-bold text-xl">Order Summary</h1>
                 <div className="grid grid-cols-2 gap-y-2">
                     <h3 className="text-left">Items :</h3>
@@ -95,7 +98,13 @@ const Cart: React.FC = () => {
 
             </div>
         </div>
-      </div>
+      </div> : <div className="w-11/12 mx-auto h-screen overflow-y-hidden flex items-center justify-center flex-col gap-2">
+        <img loading="lazy" className="w-[30rem]" src={EmptyCart}/>
+        <div className="flex flex-col items-center gap-8">
+            <h2 className="font-bold text-4xl sm:text-5xl">Empty Shopping Cart</h2>
+            <div className="w-60"><CTABtn title="Back to Shopping" bg="black" icon={<PiArrowLeft size={20}/>} text="white"/></div>
+        </div>
+      </div>}
     </MainLayout>
   );
 };
