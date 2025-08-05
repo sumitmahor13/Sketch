@@ -10,6 +10,7 @@ export const cartApi = createApi({
 
     getUserCart: builder.query<any, void>({
       query: () => "/cart",
+      providesTags: ['Cart'],
     }),
 
     addToCart : builder.mutation({
@@ -24,16 +25,19 @@ export const cartApi = createApi({
         query : (productId) => ({
             url:`/cart/delete/${productId}`,
             method:'DELETE'
-        })
+        }),
+        invalidatesTags: ['Cart'],
     }),
 
     updateCart : builder.mutation({
-        query: (productId) => ({
+        query: ({productId, quantity}) => ({
             url:`/cart/update/${productId}`,
-            method:"PUT"
-        })
+            method:"PUT",
+            body: { quantity },
+        }),
+        invalidatesTags: ['Cart'],
     })
   }),
 });
 
-export const { useGetUserCartQuery, useAddToCartMutation, useRemoveFromCartMutation,useUpdateCartMutation } = cartApi;
+export const { useGetUserCartQuery, useAddToCartMutation, useRemoveFromCartMutation, useUpdateCartMutation } = cartApi;

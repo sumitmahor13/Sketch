@@ -137,8 +137,6 @@ export const getUserCart = async (req, res) => {
     }
 };
 
-
-
 export const updateCart = async(req, res) => {
     try {
         const {id} = req.params;
