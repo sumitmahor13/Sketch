@@ -13,6 +13,7 @@ import {
   PiSquaresFour,
 } from "react-icons/pi";
 import { useLogoutMutation } from "@/feature/auth/authApi";
+import MenuBox from "./MenuBox";
 import toast from "react-hot-toast";
 
 type NavCategory = {
@@ -235,7 +236,8 @@ const Navbar: React.FC = () => {
             </li>
           ))}
         </ul>
-        <div>
+        <MenuBox />
+        {/* <div>
           {user ? (
             <div className="flex gap-5 text-gray-800 items-center">
               {user.role === "user" ? (
@@ -252,7 +254,7 @@ const Navbar: React.FC = () => {
           ) : (
             <button>Login</button>
           )}
-        </div>
+        </div> */}
       </div>
 
       <AnimatePresence mode="wait">

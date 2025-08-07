@@ -8,7 +8,7 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import { useCheckAuthQuery } from "./feature/auth/authApi";
 import { useDispatch } from "react-redux";
-import { clearUser, setUser } from "./feature/auth/authSlice";
+import { clearUser, setAuth, setUser } from "./feature/auth/authSlice";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
@@ -25,6 +25,7 @@ function App() {
     useEffect(() => {
       if (data?.user) {
         dispatch(setUser(data?.user));
+        dispatch(setAuth(data?.isAuthenticated));
       } else if (isError) {
         dispatch(clearUser());
       }

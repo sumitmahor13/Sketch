@@ -9,9 +9,9 @@ type PrivateRouteProps = {
 };
 
 const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
-  const { data, isLoading } = useCheckAuthQuery();
+  const { data, isLoading, isFetching } = useCheckAuthQuery();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading || isFetching ) return <p>Loading...</p>;
 
   const isLoggedIn = data?.isAuthenticated;
   const userRole = data?.user?.role;

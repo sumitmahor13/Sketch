@@ -6,10 +6,12 @@ export const authApi = createApi({
     baseUrl: import.meta.env.VITE_BACKEND_URL,
     credentials: "include", // for cookie to be sent
   }),
+  tagTypes: ['Auth'],
   endpoints: (builder) => ({
 
     checkAuth: builder.query<any, void>({
       query: () => '/auth/check-auth',
+      providesTags:['Auth'],
     }),
 
     loginUser: builder.mutation({
@@ -25,6 +27,7 @@ export const authApi = createApi({
         url: '/auth/logout',
         method: 'POST',
       }),
+      invalidatesTags:['Auth']
     }),
 
     register: builder.mutation({

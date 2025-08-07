@@ -293,7 +293,7 @@ export const logoutUser = async(req, res) => {
 export const checkAuth = async(req, res) => {
     try {
         const token = req.cookies.token;
-        if(!token) {return res.status(404).json({isAuthenticated:false})}
+        if(!token) {return res.status(404).json({isAuthenticated:false, user: null})}
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         //get user by id and send it into response
