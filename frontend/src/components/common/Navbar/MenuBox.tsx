@@ -13,17 +13,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { RootState } from "../../../app/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PiArrowLeftDuotone, PiBag, PiBoat, PiGear, PiUser } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "@/feature/auth/authApi";
 import toast from "react-hot-toast";
+import { authApi } from "@/feature/auth/authApi";
 
 const MenuBox: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [logout] = useLogoutMutation();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userMenu = [
     { link: "/profile", title: "Profile", icon:<PiUser/> },
@@ -34,13 +36,14 @@ const MenuBox: React.FC = () => {
 
   const adminMenu = [
     { link: "/profile", title: "Profile", icon:<PiUser/> },
-    { link: "/dashboard", title: "dashboard" },
+    { link: "admin/dashboard", title: "dashboard" },
   ];
 
   const handleLogout = async () => {
     try {
       const res = await logout({});
       toast.success(res.data.message);
+      dispatch(authApi.util.resetApiState())   //for clear cache of authApi
       navigate("/login");
     } catch (error) {
       toast.error("Somthing went wrong");
@@ -92,7 +95,6 @@ const MenuBox: React.FC = () => {
         <DropdownMenuItem onClick={handleLogout} className="focus:bg-red-100">
           <PiArrowLeftDuotone />
           Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

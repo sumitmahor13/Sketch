@@ -17,6 +17,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Register: FC = lazy(() => import("./pages/auth/Register"));
 const Login: FC = lazy(() => import("./pages/auth/Login"));
 const Cart: FC = lazy(() => import("./pages/Cart"))
+const Profile: FC = lazy(() => import("./pages/Profile"))
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ function App() {
           <Route path="/dashboard" element={<PrivateRoute allowedRoles={['user']}><UserDashboard/></PrivateRoute>}/>
           <Route path="/admin/dashboard" element={<PrivateRoute allowedRoles={['admin']}><AdminDashboard /></PrivateRoute>}/>
           <Route path="/cart" element={<PrivateRoute allowedRoles={['user']}><Cart /></PrivateRoute>}/>
+          <Route path="/profile" element={<PrivateRoute allowedRoles={['user', 'admin']}><Profile /></PrivateRoute>}/>
         </Routes>
       </Suspense>
     </Router>

@@ -61,14 +61,14 @@ const Cart: React.FC = () => {
                                             <h3 className="font-md text-md">Size: {item?.product?.size}</h3>
                                         </div>
                                     </div>
-                                    <div className="flex font-semibold text-green-500 items-center">₹ {item?.product?.price}</div>
+                                    <div className="flex font-medium text-green-500 items-center">{formatToINR(item?.product?.price)}</div>
                                     <div className="flex gap-3 items-center">
                                         <button className="rounded-full p-1 border cursor-pointer" disabled={isUpdating} onClick={() => updateQuantity(item?._id, item?.quantity-1)}><PiMinus/></button>
                                         <div>{item?.quantity}</div>
                                         <button className="rounded-full p-1 border cursor-pointer" disabled={isUpdating} onClick={() => updateQuantity(item?._id, item?.quantity+1)}><PiPlus/></button>
                                     </div>
                                     <div className="flex items-center justify-between mr-10">
-                                    <div>₹ {item?.subtotal}</div>
+                                    <div>{formatToINR(item?.subtotal)}</div>
                                     <div onClick={() => removeItem(item?._id)} className="text-red-400 text-2xl"><PiTrash size={20}/></div>
                                     </div>
                                 </div>

@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     default:""
   },
+  
   dateOfBirth: {
     type: Date,
     default:null

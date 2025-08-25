@@ -20,6 +20,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
+      invalidatesTags: ['Auth']
     }),
 
     logout: builder.mutation({
